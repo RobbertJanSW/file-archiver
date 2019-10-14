@@ -1,0 +1,19 @@
+<folders>
+  <folder>
+    <path>$HOME\Desktop\archiving-files\test-path</path>
+    <fileFilter>*.*</fileFilter>
+    <archivePath>$HOME\Desktop\archiving-files\test-archive</archivePath>
+    <timespan>month</timespan>
+    <retention>1</retention>
+    <zip>true</zip>
+    <folders>
+      <folder>
+        <path>$HOME\Desktop\archiving-files\test-path\test-path2</path>
+        <archivePath>$HOME\Desktop\archiving-files\test-archive2</archivePath>
+        <timespan>month</timespan>
+        <retention>1</retention>
+        <zip>true</zip>
+      </folder>
+    </folders>
+  </folder>
+</folders>
