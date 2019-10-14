@@ -39,13 +39,6 @@ function archive($archiveObj, $defaults = $null) {
   $archiveObj.path = $originalPath
 
   if ($defaults -ne $null) {
-	write-host $defaults
-	write-host $defaults
-	write-host $defaults
-	write-host $defaults.GetType()
-	$r = 'Path'
-	write-host "$($defaults.$r)"
-	pause 99
     $global:inheritableObjKeys | % {
 		$key = $_
 		if (((-Not ($archiveObj.$key)) -And $defaults.$key)) {
