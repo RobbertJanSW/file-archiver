@@ -9,15 +9,9 @@ $global:pathsDone = New-Object System.Collections.ArrayList($null)
 function archive($archiveObj, $defaults = $null) {
 
   if ($archiveObj.skip) {
-	write-host "SKIPPING $($archiveObj.Path)"
-	write-host "SKIPPING $($archiveObj.Path)"
-	write-host "SKIPPING $($archiveObj.Path)"
-	write-host "SKIPPING $($archiveObj.Path)"
-	start-sleep 1
-    $global:pathsDone.Add($archiveObj.Path)
-	return
+    $global:pathsDone.Add($archiveObj.Path) | Out-Null
+    return
   }
-  
 
   write-host "Running $($archiveObj.Path)" -ForeGroundColor Red
   if ($archiveObj.folders) {
@@ -26,9 +20,7 @@ function archive($archiveObj, $defaults = $null) {
 	  write-host "Moving run lower to defined subfolders" -ForeGroundColor Red
       archive $_ $archiveObj
     }
-	write-host "DONE lower to defined subfolders" -ForeGroundColor Red
-#    return
-#	sleep 9999
+    write-host "DONE lower to defined subfolders" -ForeGroundColor Red
   }
 
   # Should we process this path recursive?
@@ -92,12 +84,12 @@ function archive($archiveObj, $defaults = $null) {
 	  $_.FullName
 	  Remove-Item $_.FullName
     } else {
-		write-host $_.LastWriteTime -ForeGroundColor Red
-	}
+      write-host $_.LastWriteTime -ForeGroundColor Red
+    }
   }
-  
+
   # Register this path as processed so we won't process it again later (in case of recursion)
-  $global:pathsDone.Add($path)
+  $global:pathsDone.Add($path) | Out-Null
 
 }
 
