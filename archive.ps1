@@ -10,7 +10,6 @@ $global:pathsDone = New-Object System.Collections.ArrayList($null)
 function log($msg) {
   $myPath = $PSScriptRoot
   $log = "$myPath\log.txt"
-  
   add-content -Path $log -Value $msg
 }
 
@@ -24,6 +23,7 @@ function verifyContent($archiveFullPath, $fileItem) {
 function archive($archiveObj, $defaults = $null) {
 
   if ($archiveObj.skip) {
+	log "Skipping $($archiveObj.Path) by config"
     $global:pathsDone.Add($archiveObj.Path) | Out-Null
     return
   }
@@ -84,6 +84,7 @@ function archive($archiveObj, $defaults = $null) {
 	  $archiveDateString = Get-Date $_.LastWriteTime -Format $archiveDateFormat
 	  $archiveFullPath = "$($archiveObj.archivePath)`\$($archiveDateString)-archive.zip"
 	  $error.Clear()
+	  log "Archiving file $($_.FullName) with LastWriteTime $($_.LastWriteTime) to archive $($archiveFullPath)"
       & "C:\Program Files (x86)\7-Zip\7z.exe" a $archiveFullPath $_.FullName
       verifyContent $archiveFullPath $_
 	  if ($error) { throw "Error occured - 3267" }
