@@ -85,7 +85,7 @@ function archive($archiveObj, $defaults = $null) {
 	  $archiveFullPath = "$($archiveObj.archivePath)`\$($archiveDateString)-archive.zip"
 	  $error.Clear()
 	  log "Archiving file $($_.FullName) with LastWriteTime $($_.LastWriteTime) to archive $($archiveFullPath)"
-      & "C:\Program Files (x86)\7-Zip\7z.exe" a $archiveFullPath $_.FullName
+      & "C:\Program Files (x86)\7-Zip\7z.exe" a $archiveFullPath $_.FullName | Out-Null
       verifyContent $archiveFullPath $_
 	  if ($error) { throw "Error occured - 3267" }
 	  $_.LastWriteTime
