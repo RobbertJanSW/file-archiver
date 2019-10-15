@@ -79,7 +79,7 @@ function archive($archiveObj, $defaults = $null) {
   $archiveLimitDate = ($today).AddDays(-1 * $timespanDays)
   log "Archiving date limit by retention is: $archiveLimitDate"
 
-  get-childitem $path -filter $fileFilter | sort LastWriteTime  | % {
+  get-childitem $path -filter $fileFilter | ?{ -Not $_.PSIsContainer } | sort LastWriteTime  | % {
     if ($_.LastWriteTime -lt $archiveLimitDate) {
 	  $archiveDateString = Get-Date $_.LastWriteTime -Format $archiveDateFormat
 	  $archiveFullPath = "$($archiveObj.archivePath)`\$($archiveDateString)-archive.zip"
