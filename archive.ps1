@@ -1,11 +1,12 @@
-
-
+##########################
 # INIT
-
+##########################
 $global:inheritableObjKeys = @("fileFilter","archivePath","timespan","retention","zip")
-
 $global:pathsDone = New-Object System.Collections.ArrayList($null)
 
+##########################
+# Functions
+##########################
 function archive($archiveObj, $defaults = $null) {
 
   if ($archiveObj.skip) {
@@ -88,7 +89,9 @@ function archive($archiveObj, $defaults = $null) {
 
 
 
-
+##########################
+# Main
+##########################
 $myPath = $PSScriptRoot
 [xml]$global:config = gc "$($myPath)\\archive-config.xml"
 
