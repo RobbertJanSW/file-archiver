@@ -88,8 +88,6 @@ function archive($archiveObj, $defaults = $null) {
       & "C:\Program Files (x86)\7-Zip\7z.exe" a $archiveFullPath $_.FullName | Out-Null
       verifyContent $archiveFullPath $_
 	  if ($error) { throw "Error occured - 3267" }
-	  $_.LastWriteTime
-	  $_.FullName
 	  Remove-Item $_.FullName
     }
   }
