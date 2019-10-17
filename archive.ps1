@@ -3,6 +3,7 @@
 ##########################
 $global:inheritableObjKeys = @("fileFilter","archivePath","timespan","retention","zip")
 $global:pathsDone = New-Object System.Collections.ArrayList($null)
+$global:sevenzipBinary = "C:\Program Files (x86)\7-Zip\7z.exe"
 
 ##########################
 # Functions
@@ -15,8 +16,8 @@ function log($msg) {
 }
 
 function verifyContent($archiveFullPath, $fileItem) {
-  $inArchiveCRC = ($(& "C:\Program Files (x86)\7-Zip\7z.exe" l -slt "$($archiveFullPath)" "$($fileItem.Name)" | findstr 'CRC') -split ' ')[-1]
-  $onDiskCRCMatch = ($(& "C:\Program Files (x86)\7-Zip\7z.exe" h "$($fileItem.FullName)" | findstr $inArchiveCRC)).count
+  $inArchiveCRC = ($(& "$global:sevenzipBinary" l -slt "$($archiveFullPath)" "$($fileItem.Name)" | findstr 'CRC') -split ' ')[-1]
+  $onDiskCRCMatch = ($(& "$global:sevenzipBinary" h "$($fileItem.FullName)" | findstr $inArchiveCRC)).count
   if ($onDiskCRCMatch -ne 3) { throw "ERROR IN CRC!! $inArchiveCRC" }
 
 }
@@ -86,7 +87,7 @@ function archive($archiveObj, $defaults = $null) {
 	  $archiveFullPath = "$($archiveObj.archivePath)`\$($archiveDateString)-archive.zip"
 	  $error.Clear()
 	  log "Archiving file $($_.FullName) with LastWriteTime $($_.LastWriteTime) to archive $($archiveFullPath)"
-      & "C:\Program Files (x86)\7-Zip\7z.exe" a $archiveFullPath $_.FullName | Out-Null
+      & "$global:sevenzipBinary" a $archiveFullPath $_.FullName | Out-Null
       verifyContent $archiveFullPath $_
 	  if ($error) { throw "Error occured - 3267" }
 	  Remove-Item $_.FullName
