@@ -8,8 +8,9 @@ $global:pathsDone = New-Object System.Collections.ArrayList($null)
 # Functions
 ##########################
 function log($msg) {
+  $timestamp = Get-Date -Format "yyyy-MM-dd-HH"
   $myPath = $PSScriptRoot
-  $log = "$myPath\log.txt"
+  $log = "$myPath\$timestamp-archiver-log.txt"
   add-content -Path $log -Value $msg
 }
 
