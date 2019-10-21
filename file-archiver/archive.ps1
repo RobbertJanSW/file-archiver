@@ -56,13 +56,13 @@ function archive($archiveObj, $defaults = $null) {
 	  if (-Not ($global:pathsDone.Contains($_.FullName.ToLower()))) {
 	    # Tricking the path into a XML object thingy:
 	    $archiveObjCopy = $archiveObj.Clone()
-		$archiveObjCopy.Path = $_.FullName
-		if (-Not $archiveObjCopy.rootPath) {
-		  $xmlSubElt = $global:config.CreateElement('rootPath')
-		  $xmlSubText = $global:config.CreateTextNode($archiveObj.Path)
-		  $xmlSubElt.AppendChild($xmlSubText) | Out-Null
-		  $archiveObjCopy.AppendChild($xmlSubElt) | Out-Null
-		}
+		  $archiveObjCopy.Path = $_.FullName
+		  if (-Not $archiveObjCopy.rootPath) {
+		    $xmlSubElt = $global:config.CreateElement('rootPath')
+		    $xmlSubText = $global:config.CreateTextNode($archiveObj.Path)
+		    $xmlSubElt.AppendChild($xmlSubText) | Out-Null
+		    $archiveObjCopy.AppendChild($xmlSubElt) | Out-Null
+		  }
 	    archive $archiveObjCopy
 	  }
 	}

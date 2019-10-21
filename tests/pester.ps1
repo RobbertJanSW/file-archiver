@@ -30,4 +30,7 @@ describe 'Testrun' {
         it 'should NOT archive files in .\testfolder2\subfolder4' {
 		(Get-ChildItem .\tests\fixtures\testfolder2\subfolder4).Count | Should -Be 1
         }
+        it 'should NOT archive files in .\ (testfolder root)' {
+		(Get-ChildItem .\tests\fixtures).Count | Should -Be 3
+        }
 }
