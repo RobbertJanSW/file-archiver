@@ -25,7 +25,7 @@ function verifyContent($archiveFullPath, $fileItem) {
   if ($error -ne $null) { throw $error; exit 78 }
   $onDiskCRCMatch = ($(& "$global:sevenzipBinary" h "$($fileItem.FullName)" | findstr $inArchiveCRC)).count
   if ($error -ne $null) { throw $error; exit 79 }
-  if ($onDiskCRCMatch -ne 3) { throw "ERROR IN CRC!! $inArchiveCRC" }
+  if ($onDiskCRCMatch -ne 3) { throw "ERROR in CRC check between $archiveFullPath and $($fileItem.FullName)" }
 
 }
 
