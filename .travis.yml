@@ -1,0 +1,8 @@
+language: shell
+
+matrix:
+  include:
+    - os: windows
+
+script:
+  - powershell.exe -ExecutionPolicy ByPass '.\tests\wrapperscript.ps1'
