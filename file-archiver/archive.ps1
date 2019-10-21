@@ -25,8 +25,7 @@ function verifyContent($archiveFullPath, $fileItem) {
   if ($error -ne $null) { throw $error; exit 78 }
   $onDiskCRCMatch = ($(& "$global:sevenzipBinary" h "$($fileItem.FullName)" | findstr $inArchiveCRC)).count
   if ($error -ne $null) { throw $error; exit 79 }
-  if ($onDiskCRCMatch -ne 3) { throw "ERROR in CRC check between $archiveFullPath and $($fileItem.FullName)" }
-
+  if ($onDiskCRCMatch -ne 3) { throw "ERROR in CRC check between file $($fileItem.Name) in $archiveFullPath and $($fileItem.FullName)" }
 }
 
 function archive($archiveObj, $defaults = $null) {
@@ -57,7 +56,13 @@ function archive($archiveObj, $defaults = $null) {
 	  if (-Not ($global:pathsDone.Contains($_.FullName.ToLower()))) {
 	    # Tricking the path into a XML object thingy:
 	    $archiveObjCopy = $archiveObj.Clone()
-		$archiveObjCopy.Path = $_.FullName
+		  $archiveObjCopy.Path = $_.FullName
+		  if (-Not $archiveObjCopy.rootPath) {
+		    $xmlSubElt = $global:config.CreateElement('rootPath')
+		    $xmlSubText = $global:config.CreateTextNode($archiveObj.Path)
+		    $xmlSubElt.AppendChild($xmlSubText) | Out-Null
+		    $archiveObjCopy.AppendChild($xmlSubElt) | Out-Null
+		  }
 	    archive $archiveObjCopy
 	  }
 	}
@@ -94,7 +99,12 @@ function archive($archiveObj, $defaults = $null) {
   get-childitem $path -filter $fileFilter | ?{ -Not $_.PSIsContainer } | % {
     if ($_.LastWriteTime -le $archiveLimitDate) {
 	  $archiveDateString = Get-Date $_.LastWriteTime -Format $archiveDateFormat
-	  $archiveFullPath = "$($archiveObj.archivePath)`\$($archiveDateString)-archive.zip"
+	  if ($archiveObj.rootPath) {
+	    # Running recursive in subfolder
+	    $subfolder = ($archiveObj.Path -split [regex]::Escape("$($archiveObj.rootPath)`\"))[1]
+	    $subfolder = "$subfolder`\"
+	  }
+	  $archiveFullPath = "$($archiveObj.archivePath)`\$($subfolder)$($archiveDateString)-archive.zip"
 	  $error.Clear()
 	  log "Archiving file $($_.FullName) with LastWriteTime $($_.LastWriteTime) to archive $($archiveFullPath)"
       & "$global:sevenzipBinary" a $archiveFullPath $_.FullName | Out-Null
