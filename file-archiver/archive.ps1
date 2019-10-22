@@ -1,3 +1,7 @@
+param([Parameter(Mandatory=$false)]
+	  [string]$configFile = "$($PSScriptRoot)\\archive-config.xml"
+)
+
 ##########################
 # INIT
 ##########################
@@ -127,8 +131,7 @@ function archive($archiveObj, $defaults = $null) {
 ##########################
 log "Starting at $(Get-Date)"
 
-$myPath = $PSScriptRoot
-[xml]$global:config = gc "$($myPath)\\archive-config.xml"
+[xml]$global:config = gc $configFile
 
 $config.folders.folder | % {
   archive $_
