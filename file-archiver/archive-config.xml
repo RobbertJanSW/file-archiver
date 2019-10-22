@@ -29,7 +29,7 @@
   <folder>
     <path>tests\fixtures\testfolder2</path>
     <fileFilter>*.*</fileFilter>
-    <archivePath>test-archive</archivePath>
+    <archivePath>test-archive4</archivePath>
     <timespan>month</timespan>
     <retention>0</retention>
     <zip>true</zip>
