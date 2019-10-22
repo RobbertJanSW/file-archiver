@@ -24,11 +24,12 @@ describe 'Testrun' {
         it 'should archive files in .\testfolder2' {
 		(Get-ChildItem .\tests\fixtures\testfolder2).Count | Should -Be 2
         }
-        it 'should archive files in .\testfolder2\subfolder3' {
+        it 'should archive files in .\testfolder2\subfolder3 to test-archive4\subfolder3\*.zip' {
 		(Get-ChildItem .\tests\fixtures\testfolder2\subfolder3).Count | Should -Be 0
+		(Get-ChildItem -Filter *.zip .\test-archive4\subfolder3).Count | Should -Be 1
         }
         it 'should archive ONLY *.txt files in .\testfolder4' {
-		(Get-ChildItem .\tests\fixtures\testfolder4).Count | Should -Be 2
+		(Get-ChildItem .\tests\fixtures\testfolder4).Count | Should -Be 3
 		(Get-ChildItem -Filter *.txt .\tests\fixtures\testfolder4).Count | Should -Be 0
         }
         it 'should archive ONLY *.log files in .\testfolder3' {
@@ -40,5 +41,9 @@ describe 'Testrun' {
         }
         it 'should NOT archive files in .\ (testfolder root)' {
 		(Get-ChildItem .\tests\fixtures).Count | Should -Be 5
+        }
+        it 'should archive the .txt file in .\testfolder4\subfolder5\subfolder6 to test-archive5\subfolder5\subfolder6\*.zip' {
+		(Get-ChildItem .\tests\fixtures\testfolder4\subfolder5\subfolder6).Count | Should -Be 0
+		(Get-ChildItem -Filter *.zip .\test-archive5\subfolder5\subfolder6).Count | Should -Be 1
         }
 }

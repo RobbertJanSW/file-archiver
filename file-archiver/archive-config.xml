@@ -61,5 +61,6 @@
     <timespan>month</timespan>
     <retention>0</retention>
     <zip>true</zip>
+    <recurse>1</recurse>
   </folder>
 </folders>
