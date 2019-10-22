@@ -28,7 +28,7 @@ describe 'Testrun' {
 		(Get-ChildItem .\tests\fixtures\testfolder2\subfolder3).Count | Should -Be 0
         }
         it 'should archive ONLY *.txt files in .\testfolder4' {
-		(Get-ChildItem .\tests\fixtures\testfolder4).Count | Should -Be 2
+		(Get-ChildItem .\tests\fixtures\testfolder4).Count | Should -Be 3
 		(Get-ChildItem -Filter *.txt .\tests\fixtures\testfolder4).Count | Should -Be 0
         }
         it 'should archive ONLY *.log files in .\testfolder3' {
