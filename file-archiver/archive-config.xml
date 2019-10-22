@@ -46,4 +46,20 @@
       </folder>
     </folders>
   </folder>
+  <folder>
+    <path>tests\fixtures\testfolder3</path>
+    <fileFilter>*.log</fileFilter>
+    <archivePath>test-archive5</archivePath>
+    <timespan>month</timespan>
+    <retention>0</retention>
+    <zip>true</zip>
+  </folder>
+  <folder>
+    <path>tests\fixtures\testfolder4</path>
+    <fileFilter>*.txt</fileFilter>
+    <archivePath>test-archive5</archivePath>
+    <timespan>month</timespan>
+    <retention>0</retention>
+    <zip>true</zip>
+  </folder>
 </folders>
