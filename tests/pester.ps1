@@ -27,10 +27,18 @@ describe 'Testrun' {
         it 'should archive files in .\testfolder2\subfolder3' {
 		(Get-ChildItem .\tests\fixtures\testfolder2\subfolder3).Count | Should -Be 0
         }
+        it 'should archive ONLY *.txt files in .\testfolder4' {
+		(Get-ChildItem .\tests\fixtures\testfolder4).Count | Should -Be 2
+		(Get-ChildItem -Filter *.txt .\tests\fixtures\testfolder4).Count | Should -Be 0
+        }
+        it 'should archive ONLY *.log files in .\testfolder3' {
+		(Get-ChildItem .\tests\fixtures\testfolder3).Count | Should -Be 2
+		(Get-ChildItem -Filter *.log .\tests\fixtures\testfolder3).Count | Should -Be 0
+        }
         it 'should NOT archive files in .\testfolder2\subfolder4' {
 		(Get-ChildItem .\tests\fixtures\testfolder2\subfolder4).Count | Should -Be 1
         }
         it 'should NOT archive files in .\ (testfolder root)' {
-		(Get-ChildItem .\tests\fixtures).Count | Should -Be 3
+		(Get-ChildItem .\tests\fixtures).Count | Should -Be 5
         }
 }
