@@ -46,14 +46,17 @@ describe 'Testrun' {
 		(Get-ChildItem .\tests\fixtures\testfolder4\subfolder5\subfolder6).Count | Should -Be 0
 		(Get-ChildItem -Filter *.zip .\test-archive5\subfolder5\subfolder6).Count | Should -Be 1
         }
+        it 'should create the default logfile' {
+		(Get-ChildItem .\file-archiver\*-archiver-log.txt).Count | Should -Be 1
+        }
 }
 describe 'Testrun with alternate logfile location' {
         it 'should succeed' {
 		$error.Clear()
-		iex '.\file-archiver\archive.ps1 -logfile .\file-archiver\logfile.log'
+		iex '.\file-archiver\archive.ps1 -logfile .\tests\logfile.log'
 		$error | Should -Be $Null
         }
         it 'should create the defined alternate logfile' {
-		(Get-ChildItem .\file-archiver\logfile.log).Count | Should -Be 1
+		(Get-ChildItem .\tests\logfile.log).Count | Should -Be 1
         }
 }
