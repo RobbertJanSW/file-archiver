@@ -49,7 +49,7 @@ describe 'Testrun' {
 describe 'Testrun with alternate logfile location' {
         it 'should succeed' {
 		$error.Clear()
-		iex '.\file-archiver\archive.ps1 -log .\file-archiver\logfile.log'
+		iex '.\file-archiver\archive.ps1 -logfile .\file-archiver\logfile.log'
 		$error | Should -Be $Null
         }
         it 'should create the defined alternate logfile' {
