@@ -2,7 +2,7 @@ param(
   [Parameter(Mandatory=$false)]
 	  [string]$configFile = "$($PSScriptRoot)\\archive-config.xml",
   [Parameter(Mandatory=$false)]
-	  [string]$log = "$PSScriptRoot\\$timestamp-archiver-log.txt",
+	  [string]$log = "$PSScriptRoot\\$timestamp-archiver-log.txt"
 )
 
 ##########################
