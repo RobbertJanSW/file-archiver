@@ -46,6 +46,7 @@ describe 'Testrun' {
 		(Get-ChildItem .\tests\fixtures\testfolder4\subfolder5\subfolder6).Count | Should -Be 0
 		(Get-ChildItem -Filter *.zip .\test-archive5\subfolder5\subfolder6).Count | Should -Be 1
         }
+}
 describe 'Testrun with alternate logfile location' {
         it 'should succeed' {
 		$error.Clear()
