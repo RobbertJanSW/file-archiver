@@ -9,7 +9,7 @@ describe 'Requirements' {
 describe 'Testrun' {
         it 'should succeed' {
 		$error.Clear()
-		iex '.\file-archiver\archive.ps1 -configFile .\file-archiver\tests\fixtures\archive-config.xml'
+		iex '.\file-archiver\archive.ps1 -configFile .\tests\fixtures\archive-config.xml'
 		$error | Should -Be $Null
         }
         it 'should archive files in .\testfolder' {
@@ -53,7 +53,7 @@ describe 'Testrun' {
 describe 'Testrun with alternate logfile location' {
         it 'should succeed' {
 		$error.Clear()
-		iex '.\file-archiver\archive.ps1 -configFile .\file-archiver\tests\fixtures\archive-config.xml -logfile .\tests\logfile.log'
+		iex '.\file-archiver\archive.ps1 -configFile .\tests\fixtures\archive-config.xml -logfile .\tests\logfile.log'
 		$error | Should -Be $Null
         }
         it 'should create the defined alternate logfile' {
