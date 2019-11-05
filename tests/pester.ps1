@@ -2,8 +2,8 @@ describe 'Requirements' {
         it 'should detect 7Zip' {
 		((Test-Path 'C:\Program Files (x86)\7-Zip\7z.exe') -Or ((iex '7z.exe -h').count -gt 0)) | Should -Be $true
         }
-        it 'should detect config xml' {
-		Test-Path '.\file-archiver\archive-config.xml' | Should -Be $true
+        it 'should detect test config XML' {
+		Test-Path '.\tests\fixtures\archive-config.xml' | Should -Be $true
         }
 }
 describe 'Testrun' {
@@ -40,7 +40,7 @@ describe 'Testrun' {
 		(Get-ChildItem .\tests\fixtures\testfolder2\subfolder4).Count | Should -Be 1
         }
         it 'should NOT archive files in .\ (testfolder root)' {
-		(Get-ChildItem .\tests\fixtures).Count | Should -Be 5
+		(Get-ChildItem .\tests\fixtures).Count | Should -Be 6
         }
         it 'should archive the .txt file in .\testfolder4\subfolder5\subfolder6 to test-archive5\subfolder5\subfolder6\*.zip' {
 		(Get-ChildItem .\tests\fixtures\testfolder4\subfolder5\subfolder6).Count | Should -Be 0
