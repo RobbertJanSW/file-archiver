@@ -2,7 +2,9 @@ param(
   [Parameter(Mandatory=$false)]
 	  [string]$configFile = "$PSScriptRoot\\archive-config.xml",
   [Parameter(Mandatory=$false)]
-	  [string]$logfile = "$PSScriptRoot\\$timestamp-archiver-log.txt"
+	  [string]$logFilePath = $PSScriptRoot,
+  [Parameter(Mandatory=$false)]
+	  [string]$logFileName = "$(Get-Date -Format 'yyyy-MM-dd-HH')-archiver-log.txt"
 )
 
 ##########################
@@ -21,8 +23,7 @@ if (Test-Path "C:\Program Files (x86)\7-Zip\7z.exe") {
 # Functions
 ##########################
 function log($msg) {
-  $timestamp = Get-Date -Format "yyyy-MM-dd-HH"
-  add-content -Path $logfile -Value $msg
+  add-content -Path $("$logFilePath\\$logFileName") -Value $msg
 }
 
 function verifyContent($archiveFullPath, $fileItem) {
