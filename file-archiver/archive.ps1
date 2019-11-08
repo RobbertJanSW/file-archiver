@@ -132,6 +132,7 @@ function archive($archiveObj, $defaults = $null) {
 # Main
 ##########################
 log "Starting at $(Get-Date)"
+log "Commandline: $($MyInvocation.Line)"
 
 [xml]$global:config = gc $configFile
 
