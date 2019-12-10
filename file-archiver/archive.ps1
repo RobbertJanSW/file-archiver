@@ -31,6 +31,7 @@ function verifyContent($archiveFullPath, $fileItems) {
   # Extract all files from archive to temp location
   & "$global:sevenzipBinary" e "$($archiveFullPath)" -oC:\temp\tempfilearchiverdump
   $fileItems | % {
+    $fileItem = $_
     $inArchiveCRC = ($(& "$global:sevenzipBinary" h "C:\\temp\\tempfilearchiverdump\\$($fileItem.Name)" | findstr 'CRC') -split ' ')[-1]
     if ($error -ne $null) { throw $error; exit 78 }
     $onDiskCRCMatch = ($(& "$global:sevenzipBinary" h "$($fileItem.FullName)" | findstr $inArchiveCRC)).count
@@ -121,15 +122,16 @@ function archive($archiveObj, $defaults = $null) {
 	  $error.Clear()
 	  log "Archiving file $($_.FullName) with LastWriteTime $($_.LastWriteTime) to archive $($archiveFullPath)"
 	  
-	  if (($filesArchiving.Count -gt 99) -Or ($currentArchiveCaching -ne $archiveFullPath)) {
-        & "$global:sevenzipBinary" a $archiveFullPath "$($filesArchiving)" | Out-Null
+	  if (($filesArchiving.Count -gt 99) -Or (($currentArchiveCaching -ne $Null) -And ($currentArchiveCaching -ne $archiveFullPath))) {
+	   $filesString = "$($filesArchiving | % { $_.FullName })"
+        & "$global:sevenzipBinary" a $archiveFullPath "$($filesString)" | Out-Null
         if ($error -ne $null) { throw $error; exit 77 }
         verifyContent $archiveFullPath $filesArchiving
 	    if ($error) { throw "Error occured - 3267" }
 	    $filesArchiving | % { Remove-Item $_ }
 		$filesArchiving.Clear()
 	  }
-	  $filesArchiving.Add($_.FullName)
+	  $filesArchiving.Add($_)
       $currentArchiveCaching = $archiveFullPath
     }
   }
