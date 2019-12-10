@@ -27,7 +27,12 @@ function log($msg) {
 }
 
 function verifyContent($archiveFullPath, $fileItem) {
-  $inArchiveCRC = ($(& "$global:sevenzipBinary" l -slt "$($archiveFullPath)" "$($fileItem.Name)" | findstr 'CRC') -split ' ')[-1]
+  if ($fileItem.Name.StartsWith("-")) {
+    $flnm = $fileItem.Name -replace "^-", "?"
+  } else {
+    $flnm = $fileItem.Name
+  }
+  $inArchiveCRC = ($(& "$global:sevenzipBinary" l -slt "$($archiveFullPath)" "$($flnm)" | findstr 'CRC') -split ' ')[-1]
   if ($error -ne $null) { throw $error; exit 78 }
   $onDiskCRCMatch = ($(& "$global:sevenzipBinary" h "$($fileItem.FullName)" | findstr $inArchiveCRC)).count
   if ($error -ne $null) { throw $error; exit 79 }
