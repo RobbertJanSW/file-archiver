@@ -121,7 +121,7 @@ function archive($archiveObj, $defaults = $null) {
 	  $error.Clear()
 	  log "Archiving file $($_.FullName) with LastWriteTime $($_.LastWriteTime) to archive $($archiveFullPath)"
 	  
-	  if ($filesArchiving.Count -gt 99) -Or ($currentArchiveCaching -ne $archiveFullPath) {
+	  if (($filesArchiving.Count -gt 99) -Or ($currentArchiveCaching -ne $archiveFullPath)) {
         & "$global:sevenzipBinary" a $archiveFullPath "$($filesArchiving)" | Out-Null
         if ($error -ne $null) { throw $error; exit 77 }
         verifyContent $archiveFullPath $filesArchiving
