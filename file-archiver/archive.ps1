@@ -125,7 +125,7 @@ function archive($archiveObj, $defaults = $null) {
 	  
 	  if (($filesArchiving.Count -gt 99) -Or (($currentArchiveCaching -ne $Null) -And ($currentArchiveCaching -ne $archiveFullPath))) {
 	   $filesString = "$($filesArchiving | % { $_.FullName })"
-	   & "$global:sevenzipBinary" a $archiveFullPath "$($filesString)" | Out-Null
+	   iex "$global:sevenzipBinary a $archiveFullPath $($filesString)" | Out-Null
         if ($error -ne $null) { throw $error; exit 77 }
         verifyContent $archiveFullPath $filesArchiving
 	    if ($error) { throw "Error occured - 3267" }
@@ -139,7 +139,7 @@ function archive($archiveObj, $defaults = $null) {
 
 if ($filesArchiving.Count -ne 0) {
 	   $filesString = "$($filesArchiving | % { $_.FullName })"
-	   & "$global:sevenzipBinary" a $archiveFullPath "$($filesString)" | Out-Null
+	   iex "$global:sevenzipBinary a $archiveFullPath $($filesString)" | Out-Null
         if ($error -ne $null) { throw $error; exit 77 }
         verifyContent $archiveFullPath $filesArchiving
 	    if ($error) { throw "Error occured - 3267" }
