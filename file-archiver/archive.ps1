@@ -112,7 +112,6 @@ function archive($archiveObj, $defaults = $null) {
   $filesArchiving = New-Object System.Collections.ArrayList($null)
   $currentArchiveCaching = $null
   get-childitem $path -filter $fileFilter | ?{ -Not $_.PSIsContainer } | % {
-  log "HERE WE GO 1"
     if ($_.LastWriteTime -le $archiveLimitDate) {
 	  $archiveDateString = Get-Date $_.LastWriteTime -Format $archiveDateFormat
 	  if ($archiveObj.rootPath) {
@@ -126,9 +125,6 @@ function archive($archiveObj, $defaults = $null) {
 	  
 	  if (($filesArchiving.Count -gt 99) -Or (($currentArchiveCaching -ne $Null) -And ($currentArchiveCaching -ne $archiveFullPath))) {
 	   $filesString = "$($filesArchiving | % { $_.FullName })"
-log '-----------------'
-log $filesString
-log '-----------------'
 	   & "$global:sevenzipBinary" a $archiveFullPath "$($filesString)" | Out-Null
         if ($error -ne $null) { throw $error; exit 77 }
         verifyContent $archiveFullPath $filesArchiving
@@ -143,9 +139,6 @@ log '-----------------'
 
 if ($filesArchiving.Count -ne 0) {
 	   $filesString = "$($filesArchiving | % { $_.FullName })"
-log '-----------------'
-log $filesString
-log '-----------------'
 	   & "$global:sevenzipBinary" a $archiveFullPath "$($filesString)" | Out-Null
         if ($error -ne $null) { throw $error; exit 77 }
         verifyContent $archiveFullPath $filesArchiving
