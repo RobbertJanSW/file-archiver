@@ -133,7 +133,7 @@ function archive($archiveObj, $defaults = $null) {
 	    $filesArchiving | % { Remove-Item $_.FullName }
 		$filesArchiving.Clear()
 	  }
-	  $filesArchiving.Add($_)
+	  $filesArchiving.Add($_) | Out-Null
       $currentArchiveCaching = $archiveFullPath
     }
   }
