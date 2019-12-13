@@ -63,4 +63,13 @@
     <zip>true</zip>
     <recurse>1</recurse>
   </folder>
+  <folder>
+    <path>tests\fixtures\testfolder5</path>
+    <fileFilter>*.*</fileFilter>
+    <archivePath>test-archive6</archivePath>
+    <timespan>month</timespan>
+    <retention>0</retention>
+    <zip>true</zip>
+    <recurse>1</recurse>
+  </folder>
 </folders>

@@ -13,6 +13,7 @@ param(
 $ErrorActionPreference = "Stop"
 $global:inheritableObjKeys = @("fileFilter","archivePath","timespan","retention","zip")
 $global:pathsDone = New-Object System.Collections.ArrayList($null)
+$global:filesArchiving = New-Object System.Collections.ArrayList($null)
 if (Test-Path "C:\Program Files (x86)\7-Zip\7z.exe") {
   $global:sevenzipBinary = "C:\Program Files (x86)\7-Zip\7z.exe"
 } else {
@@ -26,17 +27,18 @@ function log($msg) {
   add-content -Path $("$logFilePath\\$logFileName") -Value $msg
 }
 
-function verifyContent($archiveFullPath, $fileItem) {
-  if ($fileItem.Name.StartsWith("-")) {
-    $flnm = $fileItem.Name -replace "^-", "?"
-  } else {
-    $flnm = $fileItem.Name
+function verifyContent($archiveFullPath, $fileItems) {
+  # Extract all files from archive to temp location
+  & "$global:sevenzipBinary" e "$($archiveFullPath)" -oC:\temp\tempfilearchiverdump
+  $fileItems | % {
+    $fileItem = $_
+    $inArchiveCRC = ($(& "$global:sevenzipBinary" h "C:\temp\tempfilearchiverdump\$($fileItem.Name)" | findstr 'CRC') -split ' ')[-1]
+    if ($error -ne $null) { throw $error; exit 78 }
+    $onDiskCRCMatch = ($(& "$global:sevenzipBinary" h "$($fileItem.FullName)" | findstr $inArchiveCRC)).count
+    if ($error -ne $null) { throw $error; exit 79 }
+    if ($onDiskCRCMatch -ne 3) { throw "ERROR in CRC check between file $($fileItem.Name) in $archiveFullPath and $($fileItem.FullName)" }
   }
-  $inArchiveCRC = ($(& "$global:sevenzipBinary" l -slt "$($archiveFullPath)" "$($flnm)" | findstr 'CRC') -split ' ')[-1]
-  if ($error -ne $null) { throw $error; exit 78 }
-  $onDiskCRCMatch = ($(& "$global:sevenzipBinary" h "$($fileItem.FullName)" | findstr $inArchiveCRC)).count
-  if ($error -ne $null) { throw $error; exit 79 }
-  if ($onDiskCRCMatch -ne 3) { throw "ERROR in CRC check between file $($fileItem.Name) in $archiveFullPath and $($fileItem.FullName)" }
+  remove-item C:\temp\tempfilearchiverdump\*.* -Force
 }
 
 function archive($archiveObj, $defaults = $null) {
@@ -107,6 +109,8 @@ function archive($archiveObj, $defaults = $null) {
   $archiveLimitDate = ($today).AddDays(-1 * $timespanDays)
   log "Archiving date limit by retention is: $archiveLimitDate"
 
+  $filesArchiving = New-Object System.Collections.ArrayList($null)
+  $currentArchiveCaching = $null
   get-childitem $path -filter $fileFilter | ?{ -Not $_.PSIsContainer } | % {
     if ($_.LastWriteTime -le $archiveLimitDate) {
 	  $archiveDateString = Get-Date $_.LastWriteTime -Format $archiveDateFormat
@@ -118,13 +122,30 @@ function archive($archiveObj, $defaults = $null) {
 	  $archiveFullPath = "$($archiveObj.archivePath)`\$($subfolder)$($archiveDateString)-archive.zip"
 	  $error.Clear()
 	  log "Archiving file $($_.FullName) with LastWriteTime $($_.LastWriteTime) to archive $($archiveFullPath)"
-      & "$global:sevenzipBinary" a $archiveFullPath $_.FullName | Out-Null
-      if ($error -ne $null) { throw $error; exit 77 }
-      verifyContent $archiveFullPath $_
-	  if ($error) { throw "Error occured - 3267" }
-	  Remove-Item $_.FullName
+	  
+	  if (($filesArchiving.Count -gt 99) -Or (($currentArchiveCaching -ne $Null) -And ($currentArchiveCaching -ne $archiveFullPath))) {
+	   $filesString = "$($filesArchiving | % { write-output `"'$($_.FullName)'`"})"
+	   iex "& `"$global:sevenzipBinary`" a `"$archiveFullPath`" $($filesString)" | Out-Null
+        if ($error -ne $null) { throw $error; exit 77 }
+        verifyContent $archiveFullPath $filesArchiving
+	    if ($error) { throw "Error occured - 3267" }
+	    $filesArchiving | % { Remove-Item $_.FullName }
+		$filesArchiving.Clear()
+	  }
+	  $filesArchiving.Add($_)
+      $currentArchiveCaching = $archiveFullPath
     }
   }
+
+if ($filesArchiving.Count -ne 0) {
+	   $filesString = "$($filesArchiving | % { write-output `"'$($_.FullName)'`"})"
+	   iex "& `"$global:sevenzipBinary`" a `"$archiveFullPath`" $($filesString)" | Out-Null
+        if ($error -ne $null) { throw $error; exit 77 }
+        verifyContent $archiveFullPath $filesArchiving
+	    if ($error) { throw "Error occured - 3267" }
+	    $filesArchiving | % { Remove-Item $_.FullName }
+		$filesArchiving.Clear()
+}
 
   # Register this path as processed so we won't process it again later (in case of recursion)
   $global:pathsDone.Add($path) | Out-Null
