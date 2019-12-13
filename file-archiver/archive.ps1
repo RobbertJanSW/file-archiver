@@ -125,8 +125,6 @@ function archive($archiveObj, $defaults = $null) {
 	  
 	  if (($filesArchiving.Count -gt 99) -Or (($currentArchiveCaching -ne $Null) -And ($currentArchiveCaching -ne $archiveFullPath))) {
 	   $filesString = "$($filesArchiving | % { write-output `"'$($_.FullName)'`"})"
-       log $filesString
-	   log "& `"$global:sevenzipBinary`" a `"$archiveFullPath`" $($filesString)"
 	   iex "& `"$global:sevenzipBinary`" a `"$archiveFullPath`" $($filesString)" | Out-Null
         if ($error -ne $null) { throw $error; exit 77 }
         verifyContent $archiveFullPath $filesArchiving
@@ -141,8 +139,6 @@ function archive($archiveObj, $defaults = $null) {
 
 if ($filesArchiving.Count -ne 0) {
 	   $filesString = "$($filesArchiving | % { write-output `"'$($_.FullName)'`"})"
-       log $filesString
-	   log "& `"$global:sevenzipBinary`" a `"$archiveFullPath`" $($filesString)"
 	   iex "& `"$global:sevenzipBinary`" a `"$archiveFullPath`" $($filesString)" | Out-Null
         if ($error -ne $null) { throw $error; exit 77 }
         verifyContent $archiveFullPath $filesArchiving
