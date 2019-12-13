@@ -28,8 +28,9 @@ function log($msg) {
 }
 
 function verifyContent($archiveFullPath, $fileItems) {
-  # Extract all files from archive to temp location
-  & "$global:sevenzipBinary" e "$($archiveFullPath)" -oC:\temp\tempfilearchiverdump
+  # Extract all NEEDED files from archive to temp location
+  $checkingFilesString = "$($fileItems | % { write-output `"'$($_.Name)'`"})"
+  iex "& `"$global:sevenzipBinary`" e `"$archiveFullPath`" -oC:\temp\tempfilearchiverdump $checkingFilesString" | Out-Null
   $fileItems | % {
     $fileItem = $_
     $inArchiveCRC = ($(& "$global:sevenzipBinary" h "C:\temp\tempfilearchiverdump\$($fileItem.Name)" | findstr 'CRC') -split ' ')[-1]
