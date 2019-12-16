@@ -29,7 +29,7 @@ function log($msg) {
 
 function verifyContent($archiveFullPath, $fileItems) {
   # Extract all NEEDED files from archive to temp location
-  $checkingFilesString = "$($fileItems | % { write-output `"'$($_.Name)'`"})"
+  $checkingFilesString = "$($fileItems | % { write-output `"'$($_.Name -replace "^-"m "?")'`"})"
   iex "& `"$global:sevenzipBinary`" e `"$archiveFullPath`" -oC:\temp\tempfilearchiverdump $checkingFilesString" | Out-Null
   $fileItems | % {
     $fileItem = $_
